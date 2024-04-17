@@ -7,6 +7,7 @@ import cloudinary from "cloudinary";
 export const patientRegister = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, nic, dob, gender, password } =
     req.body;
+    console.log(firstName, lastName);
   if (
     !firstName ||
     !lastName ||
@@ -41,6 +42,7 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
 
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password, confirmPassword, role } = req.body;
+  console.log(email, password, confirmPassword, role);
   if (!email || !password || !confirmPassword || !role) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
