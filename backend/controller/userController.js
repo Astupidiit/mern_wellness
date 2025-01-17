@@ -5,7 +5,8 @@ import { generateToken } from "../utils/jwtToken.js";
 import cloudinary from "cloudinary";
 
 export const patientRegister = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, nic, dob, gender, password } =
+  console.log("wwe arfef ");
+  const { firstName, lastName, email, phone,dob, gender, password } =
     req.body;
     console.log(firstName, lastName);
   if (
@@ -13,16 +14,17 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
     !dob ||
     !gender ||
     !password
   ) {
+    console.log("error 1");
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
 
   const isRegistered = await User.findOne({ email });
   if (isRegistered) {
+    console.log("error 2");
     return next(new ErrorHandler("User already Registered!", 400));
   }
 
@@ -31,7 +33,6 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    nic,
     dob,
     gender,
     password,
@@ -67,14 +68,14 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, nic, dob, gender, password } =
+  
+  const { firstName, lastName, email, phone,dob, gender, password } =
     req.body;
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
     !dob ||
     !gender ||
     !password
@@ -92,7 +93,6 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    nic,
     dob,
     gender,
     password,
@@ -106,20 +106,19 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return next(new ErrorHandler("Doctor Avatar Required!", 400));
-  }
-  const { docAvatar } = req.files;
-  const allowedFormats = ["image/png", "image/jpeg", "image/webp"];
-  if (!allowedFormats.includes(docAvatar.mimetype)) {
-    return next(new ErrorHandler("File Format Not Supported!", 400));
-  }
+  // if (!req.files || Object.keys(req.files).length === 0) {
+  //   return next(new ErrorHandler("Doctor Avatar Required!", 400));
+  // }
+//   const { docAvatar } = req.files;
+//   const allowedFormats = ["image/png", "image/jpeg", "image/webp"];
+//   if (!allowedFormats.includes(docAvatar.mimetype)) {
+//     return next(new ErrorHandler("File Format Not Supported!", 400));
+//   }
   const {
     firstName,
     lastName,
     email,
     phone,
-    nic,
     dob,
     gender,
     password,
@@ -130,12 +129,12 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
+
     !dob ||
     !gender ||
     !password ||
-    !doctorDepartment ||
-    !docAvatar
+    !doctorDepartment 
+    // ||!docAvatar
   ) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
@@ -145,33 +144,33 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("Doctor With This Email Already Exists!", 400)
     );
   }
-  const cloudinaryResponse = await cloudinary.uploader.upload(
-    docAvatar.tempFilePath
-  );
-  if (!cloudinaryResponse || cloudinaryResponse.error) {
-    console.error(
-      "Cloudinary Error:",
-      cloudinaryResponse.error || "Unknown Cloudinary error"
-    );
-    return next(
-      new ErrorHandler("Failed To Upload Doctor Avatar To Cloudinary", 500)
-    );
-  }
+  // const cloudinaryResponse = await cloudinary.uploader.upload(
+  //   docAvatar.tempFilePath
+  // );
+  // if (!cloudinaryResponse || cloudinaryResponse.error) {
+  //   console.error(
+  //     "Cloudinary Error:",
+  //     cloudinaryResponse.error || "Unknown Cloudinary error"
+  //   );
+  //   return next(
+  //     new ErrorHandler("Failed To Upload Doctor Avatar To Cloudinary", 500)
+  //   );
+  //}
   const doctor = await User.create({
     firstName,
     lastName,
     email,
     phone,
-    nic,
+   
     dob,
     gender,
     password,
     role: "Doctor",
     doctorDepartment,
-    docAvatar: {
-      public_id: cloudinaryResponse.public_id,
-      url: cloudinaryResponse.secure_url,
-    },
+    // docAvatar: {
+    //   public_id: cloudinaryResponse.public_id,
+    //   url: cloudinaryResponse.secure_url,
+    // },
   });
   res.status(200).json({
     success: true,

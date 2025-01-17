@@ -12,10 +12,34 @@ import appointmentRouter from "./router/appointmentRouter.js";
 const app = express();
 config();
 
+
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173"], // Corrected syntax
+//     methods: ["GET", "POST", "DELETE", "PUT"], // Changed 'method' to 'methods'
+//     credentials: true,
+//   })
+// );
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5174"], // Corrected syntax
+//     methods: ["GET", "POST", "DELETE", "PUT"], // Changed 'method' to 'methods'
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
-    method: ["GET", "POST", "DELETE", "PUT"],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
@@ -30,6 +54,7 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
+
 app.use("/api/v1/message", messageRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/appointment", appointmentRouter);
@@ -37,4 +62,6 @@ app.use("/api/v1/appointment", appointmentRouter);
 dbConnection();
 
 app.use(errorMiddleware);
+
 export default app;
+

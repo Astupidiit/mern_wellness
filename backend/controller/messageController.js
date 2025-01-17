@@ -3,6 +3,7 @@ import ErrorHandler from "../middlewares/error.js";
 import { Message } from "../models/messageSchema.js";
 
 export const sendMessage = catchAsyncErrors(async (req, res, next) => {
+  // console.log("we are here ");
   const { firstName, lastName, email, phone, message } = req.body;
   if (!firstName || !lastName || !email || !phone || !message) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));

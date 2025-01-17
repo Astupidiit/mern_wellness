@@ -41,6 +41,11 @@ body {
     width: 100%;
   }
 }
+.logo{
+  width: 100px;
+  height: 100px;
+  border-radius: 80%;
+}
 .form-title{
   font-size: 1.75rem;
   color: #111;

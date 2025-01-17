@@ -1,5 +1,6 @@
 class ErrorHandler extends Error {
   constructor(message, statusCode) {
+    // console.log("this is here ");
     super(message);
     this.statusCode = statusCode;
   }
